@@ -1,5 +1,4 @@
-const mongodb = require("mongodb");
-const MongoClient = mongodb.MongoClient;
+const { MongoClient, ObjectID } = require("mongodb");
 
 const connectionUrl = "mongodb://127.0.0.1:27017";
 const databaseName = "task-manager";
@@ -14,63 +13,32 @@ MongoClient.connect(
 
     const db = client.db(databaseName);
 
-    // db.collection("users").insertOne(
-    //   {
-    //     name: "Rohit",
-    //     age: 24
-    //   },
-    //   (error, result) => {
+    // db.collection("users").findOne(
+    //   { _id: new ObjectID("5d6e6d0b8d6f471b9869d0a2") },
+    //   (error, user) => {
     //     if (error) {
-    //       return console.log("Unable to insert", error);
+    //       return console.log("Unable to fetch", error);
     //     }
 
-    //     console.log(result.ops);
+    //     console.log(user);
     //   }
     // );
 
-    // db.collection("users").insertMany(
-    //   [
-    //     {
-    //       name: "John",
-    //       age: 26
-    //     },
-    //     {
-    //       name: "Doe",
-    //       age: 22
-    //     }
-    //   ],
-    //   (error, result) => {
-    //     if (error) {
-    //       return console.log("Unable to insert", error);
-    //     }
-    //     console.log(result.ops);
-    //   }
-    // );
-
-    db.collection("tasks").insertMany(
-      [
-        {
-          task: "Task 1",
-          description: "Have to complete tast 1",
-          completed: false
-        },
-        {
-          task: "Task 2",
-          description: "Have to complete tast 2",
-          completed: true
-        },
-        {
-          task: "Task 3",
-          description: "Have to complete tast 3",
-          completed: true
-        }
-      ],
-      (error, result) => {
+    db.collection("users")
+      .find({ age: 24 })
+      .toArray((error, users) => {
         if (error) {
-          return console.log("Unable to insert", error);
+          return console.log("Unable to fetch", error);
         }
-        console.log(result.ops);
-      }
-    );
+        console.log(users);
+      });
+    db.collection("users")
+      .find({ age: 24 })
+      .count((error, count) => {
+        if (error) {
+          return console.log("Unable to fetch", error);
+        }
+        console.log(count);
+      });
   }
 );
