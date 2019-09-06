@@ -14,16 +14,9 @@ app.use(express.json());
 
 //Middlewares end
 
-app.post("/users", (req, res) => {
-  const user = new User(req.body);
-
-  user
-    .save()
-    .then(() => res.send(user))
-    .catch(err => {
-      res.status(400).send(err);
-    });
-});
+//Define Routes
+app.use("/api/users", require("./src/routes/api/users"));
+app.use("/api/tasks", require("./src/routes/api/tasks"));
 
 //start server at port 5000
 const PORT = process.env.PORT || 5000;
