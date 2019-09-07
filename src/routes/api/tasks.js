@@ -83,4 +83,24 @@ router.patch("/:id", async (req, res) => {
 
 // PATCH API END
 
+// DELETE API START
+
+// @route DELETE api/tasks/:id
+// @description DELETE a single task
+// @access Public
+router.delete("/:id", async (req, res) => {
+  try {
+    const response = await Task.findByIdAndDelete(req.params.id);
+
+    if (!response) {
+      return res.status(404).send("No task found");
+    }
+    res.json({ success: "Task Successfuly Deleted" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// DELETE API END
+
 module.exports = router;

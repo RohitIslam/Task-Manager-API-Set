@@ -83,4 +83,24 @@ router.patch("/:id", async (req, res) => {
 
 // PATCH API END
 
+// DELETE API START
+
+// @route DELETE api/users/:id
+// @description DELETE a single user
+// @access Public
+router.delete("/:id", async (req, res) => {
+  try {
+    const response = await User.findByIdAndDelete(req.params.id);
+
+    if (!response) {
+      return res.status(404).send("No user found");
+    }
+    res.json({ success: "User Successfuly Deleted" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// DELETE API END
+
 module.exports = router;
