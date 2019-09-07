@@ -57,4 +57,30 @@ router.post("/", async (req, res) => {
   }
 });
 
+// POST API END
+
+// PATCH API START
+
+// @route PATCH api/tasks/:id
+// @description update task by id
+// @access Public
+router.patch("/:id", async (req, res) => {
+  try {
+    const response = await Task.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!response) {
+      return res.status(404).send("No task found");
+    }
+
+    res.json(response);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
+// PATCH API END
+
 module.exports = router;
