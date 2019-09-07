@@ -57,6 +57,21 @@ router.post("/", async (req, res) => {
   }
 });
 
+// @route POST api/users/login
+// @description User login
+// @access Public
+router.post("/login", async (req, res) => {
+  try {
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
+    res.json(user);
+  } catch (err) {
+    res.status(400).send();
+  }
+});
+
 // POST API END
 
 // PATCH API START
