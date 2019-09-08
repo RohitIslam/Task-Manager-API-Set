@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../../middlewares/authMiddleware");
 
 //Load models
 const Task = require("../../models/Task");
@@ -8,7 +9,7 @@ const Task = require("../../models/Task");
 
 // @route GET api/tasks/
 // @description get all tasks
-// @access Public
+// @access Private
 router.get("/", async (req, res) => {
   try {
     const response = await Task.find();
@@ -25,7 +26,7 @@ router.get("/", async (req, res) => {
 
 // @route GET api/tasks/:id
 // @description get task by id
-// @access Public
+// @access Private
 router.get("/:id", async (req, res) => {
   try {
     const response = await Task.findById(req.params.id);
@@ -45,9 +46,12 @@ router.get("/:id", async (req, res) => {
 
 // @route POST api/tasks/
 // @description store tasks
-// @access Public
-router.post("/", async (req, res) => {
-  const task = new Task(req.body);
+// @access Private
+router.post("/", auth, async (req, res) => {
+  const task = new Task({
+    ...req.body,
+    owner: req.user.id
+  });
 
   try {
     await task.save();
@@ -63,7 +67,7 @@ router.post("/", async (req, res) => {
 
 // @route PATCH api/tasks/:id
 // @description update task by id
-// @access Public
+// @access Private
 router.patch("/:id", async (req, res) => {
   const updates = Object.keys(req.body); // Created an array of update fields
   try {
@@ -89,7 +93,7 @@ router.patch("/:id", async (req, res) => {
 
 // @route DELETE api/tasks/:id
 // @description DELETE a single task
-// @access Public
+// @access Private
 router.delete("/:id", async (req, res) => {
   try {
     const response = await Task.findByIdAndDelete(req.params.id);

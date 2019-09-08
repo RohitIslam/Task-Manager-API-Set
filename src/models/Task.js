@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
 
 const TaskSchema = new mongoose.Schema({
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
   description: {
     type: String,
     required: true,
