@@ -82,23 +82,17 @@ router.post("/logout/all", auth, async (req, res) => {
 
 // PATCH API START
 
-// @route PATCH api/users/:id
-// @description update user by id
+// @route PATCH api/users/me
+// @description update user's own account
 // @access Public
-router.patch("/:id", async (req, res) => {
+router.patch("/me", auth, async (req, res) => {
   const updates = Object.keys(req.body); // Created an array of update fields
   try {
-    const user = await User.findById(req.params.id);
+    updates.forEach(update => (req.user[update] = req.body[update]));
 
-    if (!user) {
-      return res.status(404).send("No user found");
-    }
+    await req.user.save();
 
-    updates.forEach(update => (user[update] = req.body[update]));
-
-    await user.save();
-
-    res.json(user);
+    res.json(req.user);
   } catch (err) {
     res.status(400).json(err);
   }
