@@ -1,4 +1,5 @@
 const express = require("express");
+const auth = require("../../middlewares/authMiddleware");
 const router = express.Router();
 
 //Load models
@@ -8,8 +9,8 @@ const User = require("../../models/User");
 
 // @route GET api/users/
 // @description get all users
-// @access Public
-router.get("/", async (req, res) => {
+// @access Private
+router.get("/", auth, async (req, res) => {
   try {
     const response = await User.find();
 
