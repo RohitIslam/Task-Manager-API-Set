@@ -14,23 +14,6 @@ router.get("/me", auth, async (req, res) => {
   res.send(req.user);
 });
 
-// @route GET api/users/:id
-// @description get user by id
-// @access Public
-router.get("/:id", async (req, res) => {
-  try {
-    const response = await User.findById(req.params.id);
-
-    if (!response) {
-      return res.status(404).send("No user found");
-    }
-
-    res.json(response);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
 // GET API END
 
 // POST API START
@@ -125,16 +108,12 @@ router.patch("/:id", async (req, res) => {
 
 // DELETE API START
 
-// @route DELETE api/users/:id
-// @description DELETE a single user
+// @route DELETE api/users/me
+// @description DELETE own account
 // @access Public
-router.delete("/:id", async (req, res) => {
+router.delete("/me", auth, async (req, res) => {
   try {
-    const response = await User.findByIdAndDelete(req.params.id);
-
-    if (!response) {
-      return res.status(404).send("No user found");
-    }
+    await req.user.remove();
     res.json({ success: "User Successfuly Deleted" });
   } catch (err) {
     res.status(500).json(err);

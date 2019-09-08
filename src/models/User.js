@@ -54,7 +54,7 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-// hide private data like password and tokens from users to display
+// Hiding private data like password and tokens from users to display
 UserSchema.methods.toJSON = function() {
   const user = this;
   const userObject = user.toObject();
