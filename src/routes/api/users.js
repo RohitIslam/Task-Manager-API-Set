@@ -7,21 +7,11 @@ const User = require("../../models/User");
 
 // GET API START
 
-// @route GET api/users/
-// @description get all users
+// @route GET api/users/me
+// @description get current user profile
 // @access Private
-router.get("/", auth, async (req, res) => {
-  try {
-    const response = await User.find();
-
-    if (!response) {
-      return res.status(404).send("No user found");
-    }
-
-    res.json(response);
-  } catch (err) {
-    res.status(500).json(err);
-  }
+router.get("/me", auth, async (req, res) => {
+  res.send(req.user);
 });
 
 // @route GET api/users/:id
