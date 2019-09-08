@@ -67,12 +67,26 @@ router.post("/login", async (req, res) => {
 
 // @route POST api/users/logout
 // @description User logout from single device
-// @access Public
+// @access Private
 router.post("/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter(
       token => token.token !== req.token
     );
+
+    await req.user.save();
+    res.send();
+  } catch (err) {
+    res.status(500).send();
+  }
+});
+
+// @route POST api/users/logout/all
+// @description User logout from all devices
+// @access Private
+router.post("/logout/all", auth, async (req, res) => {
+  try {
+    req.user.tokens = [];
 
     await req.user.save();
     res.send();
