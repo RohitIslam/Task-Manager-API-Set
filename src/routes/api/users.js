@@ -36,7 +36,7 @@ router.get("/:id", async (req, res) => {
 // POST API START
 
 // @route POST api/users/
-// @description store users
+// @description Create users
 // @access Public
 router.post("/", async (req, res) => {
   const user = new User(req.body);
@@ -62,6 +62,22 @@ router.post("/login", async (req, res) => {
     res.json({ user, token });
   } catch (err) {
     res.status(400).send();
+  }
+});
+
+// @route POST api/users/logout
+// @description User logout from single device
+// @access Public
+router.post("/logout", auth, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter(
+      token => token.token !== req.token
+    );
+
+    await req.user.save();
+    res.send();
+  } catch (err) {
+    res.status(500).send();
   }
 });
 
