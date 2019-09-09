@@ -15,6 +15,24 @@ router.get("/me", auth, async (req, res) => {
   res.send(req.user);
 });
 
+// @route GET api/users/:id/avatar
+// @description get current user profile
+// @access Private
+router.get("/:id/avatar", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user || !user.avatar) {
+      return res.status(404).send("No avatar found");
+    }
+
+    res.set("Content-Type", "image/jpg");
+    res.send(user.avatar);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
 // GET API END
 
 // POST API START
