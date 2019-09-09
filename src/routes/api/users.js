@@ -98,9 +98,16 @@ const upload = multer({
   }
 });
 
-router.post("/me/avatar", upload.single("avatar"), async (req, res) => {
-  res.send();
-});
+router.post(
+  "/me/avatar",
+  upload.single("avatar"),
+  async (req, res) => {
+    res.send();
+  },
+  (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+  }
+);
 
 // POST API END
 
