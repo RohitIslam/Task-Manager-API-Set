@@ -18,7 +18,16 @@ router.get("/", auth, async (req, res) => {
   }
 
   try {
-    await req.user.populate({ path: "tasks", match }).execPopulate();
+    await req.user
+      .populate({
+        path: "tasks",
+        match,
+        options: {
+          limit: parseInt(req.query.limit),
+          skip: parseInt(req.query.skip)
+        }
+      })
+      .execPopulate();
 
     res.json(req.user.tasks);
   } catch (err) {
