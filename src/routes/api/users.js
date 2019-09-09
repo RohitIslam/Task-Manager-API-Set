@@ -85,7 +85,6 @@ router.post("/logout/all", auth, async (req, res) => {
 
 // Multer configutation
 const upload = multer({
-  dest: "src/asstes/images",
   limits: {
     fileSize: 1000000
   },
@@ -100,9 +99,12 @@ const upload = multer({
 
 router.post(
   "/me/avatar",
+  auth,
   upload.single("avatar"),
   async (req, res) => {
-    res.send();
+    req.user.avatar = req.file.buffer; // req.file.buffer contains the binary code of the uploaded image
+    await req.user.save();
+    res.send({ success: "Image successfully uploaded" });
   },
   (error, req, res, next) => {
     res.status(400).send({ error: error.message });
