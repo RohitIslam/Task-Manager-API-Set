@@ -147,6 +147,19 @@ router.delete("/me", auth, async (req, res) => {
   }
 });
 
+// @route DELETE api/users/me/avatar
+// @description DELETE user's avatar
+// @access Public
+router.delete("/me/avatar", auth, async (req, res) => {
+  try {
+    req.user.avatar = undefined;
+    await req.user.save();
+    res.json({ success: "Avatar Successfuly Deleted" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // DELETE API END
 
 module.exports = router;
