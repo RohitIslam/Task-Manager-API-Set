@@ -79,13 +79,25 @@ router.post("/logout/all", auth, async (req, res) => {
   }
 });
 
-const upload = multer({
-  dest: "src/asstes/images"
-});
-
 // @route POST api/users/me/avater
 // @description upload image for user
 // @access Private
+
+// Multer configutation
+const upload = multer({
+  dest: "src/asstes/images",
+  limits: {
+    fileSize: 1000000
+  },
+  fileFilter(req, file, callback) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return callback(new Error("Please upload a image file"));
+    }
+
+    callback(undefined, true);
+  }
+});
+
 router.post("/me/avatar", upload.single("avatar"), async (req, res) => {
   res.send();
 });
