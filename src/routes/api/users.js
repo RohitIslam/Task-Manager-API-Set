@@ -1,6 +1,7 @@
 const express = require("express");
-const auth = require("../../middlewares/authMiddleware");
 const router = express.Router();
+const auth = require("../../middlewares/authMiddleware");
+const multer = require("multer");
 
 //Load models
 const User = require("../../models/User");
@@ -76,6 +77,17 @@ router.post("/logout/all", auth, async (req, res) => {
   } catch (err) {
     res.status(500).send();
   }
+});
+
+const upload = multer({
+  dest: "src/asstes/images"
+});
+
+// @route POST api/users/me/avater
+// @description upload image for user
+// @access Private
+router.post("/me/avatar", upload.single("avatar"), async (req, res) => {
+  res.send();
 });
 
 // POST API END
