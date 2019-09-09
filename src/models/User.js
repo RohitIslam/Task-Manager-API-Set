@@ -56,6 +56,7 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
+// virtual relationship for getting all tasks of the user
 UserSchema.virtual("tasks", {
   ref: "Task",
   localField: "_id",

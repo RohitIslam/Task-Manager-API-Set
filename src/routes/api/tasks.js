@@ -11,14 +11,16 @@ const Task = require("../../models/Task");
 // @description get all tasks
 // @access Private
 router.get("/", auth, async (req, res) => {
+  const match = {};
+
+  if (req.query.completed) {
+    match.completed = req.query.completed === "true";
+  }
+
   try {
-    const tasks = await Task.find({ owner: req.user._id });
+    await req.user.populate({ path: "tasks", match }).execPopulate();
 
-    if (!tasks) {
-      return res.status(404).send("No task found");
-    }
-
-    res.json(tasks);
+    res.json(req.user.tasks);
   } catch (err) {
     res.status(500).json(err);
   }
