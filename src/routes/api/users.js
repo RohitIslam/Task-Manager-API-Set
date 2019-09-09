@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../../middlewares/authMiddleware");
 const multer = require("multer");
+const sharp = require("sharp");
 
 //Load models
 const User = require("../../models/User");
@@ -16,7 +17,7 @@ router.get("/me", auth, async (req, res) => {
 });
 
 // @route GET api/users/:id/avatar
-// @description get current user profile
+// @description Get user's profile image in the browser
 // @access Private
 router.get("/:id/avatar", async (req, res) => {
   try {
@@ -26,7 +27,7 @@ router.get("/:id/avatar", async (req, res) => {
       return res.status(404).send("No avatar found");
     }
 
-    res.set("Content-Type", "image/jpg");
+    res.set("Content-Type", "image/png");
     res.send(user.avatar);
   } catch (err) {
     res.status(400).json(err);
@@ -120,7 +121,11 @@ router.post(
   auth,
   upload.single("avatar"),
   async (req, res) => {
-    req.user.avatar = req.file.buffer; // req.file.buffer contains the binary code of the uploaded image
+    const buffer = await sharp(req.file.buffer) // req.file.buffer contains the binary code of the uploaded image
+      .resize({ width: 250, height: 250 })
+      .png()
+      .toBuffer();
+    req.user.avatar = buffer;
     await req.user.save();
     res.send({ success: "Image successfully uploaded" });
   },
