@@ -1,3 +1,3 @@
 # Task-Manager
 
-Simple task manager app created using Node Js, Express Js and MongoDB
+API set created for task manager project using Node Js, Express Js and MongoDB
