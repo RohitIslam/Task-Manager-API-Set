@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
 /node-course-images
+/config
 package-lock.json
 node-course-images.zip

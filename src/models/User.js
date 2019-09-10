@@ -81,7 +81,7 @@ UserSchema.methods.toJSON = function() {
 // custome function created for accessing this function through instances
 UserSchema.methods.generateAuthToken = async function() {
   const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, "jwtsecret", {
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, {
     expiresIn: 7200
   });
 
