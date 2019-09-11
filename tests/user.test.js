@@ -27,7 +27,7 @@ beforeEach(async () => {
 
 // TEST CASE for sign up
 test("Should signup a new user", async () => {
-  await supertest(app)
+  const response = await supertest(app)
     .post("/api/users/")
     .send({
       name: "Test User",
@@ -35,17 +35,35 @@ test("Should signup a new user", async () => {
       password: "123456789"
     })
     .expect(201);
+
+  // Assert that the database was change correctly
+  const user = await User.findById(response.body.user._id);
+  expect(user).not.toBeNull();
+
+  // Assertions about the response
+  expect(response.body).toMatchObject({
+    user: {
+      name: "Test User",
+      email: "test@test.com"
+    },
+    token: user.tokens[0].token
+  });
+
+  expect(user.password).not.toBe("123456789");
 });
 
 // TEST CASE for login
 test("Should login existing user", async () => {
-  await supertest(app)
+  const response = await supertest(app)
     .post("/api/users/login")
     .send({
-      email: "testone@test.com",
-      password: "123456789"
+      email: userOne.email,
+      password: userOne.password
     })
     .expect(200);
+
+  const user = await User.findById(userOneId);
+  expect(response.body.token).toBe(user.tokens[1].token);
 });
 
 // TEST CASE for incorrect login
@@ -83,6 +101,9 @@ test("Should delete account for user", async () => {
     .set("Authorization", `Bearer ${userOne.tokens[0].token}`) // setting up the Authorization header with JWT
     .send()
     .expect(200);
+
+  const user = await User.findById(userOneId);
+  expect(user).toBeNull();
 });
 
 // TEST CASE for not deleting account for unauthorized user
