@@ -75,3 +75,20 @@ test("Should not get current user profile", async () => {
     .send()
     .expect(401);
 });
+
+// TEST CASE for deleting current user account
+test("Should delete account for user", async () => {
+  await supertest(app)
+    .delete("/api/users/me")
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`) // setting up the Authorization header with JWT
+    .send()
+    .expect(200);
+});
+
+// TEST CASE for not deleting account for unauthorized user
+test("Should not delete account for unauthorized user", async () => {
+  await supertest(app)
+    .delete("/api/users/me")
+    .send()
+    .expect(401);
+});
