@@ -106,6 +106,21 @@ test("Should upload avatar image", async () => {
   expect(user.avatar).toEqual(expect.any(Buffer)); // checks if the user.avatar is Buffer type or not
 });
 
+// TEST CASE for updating valid user fields
+test("Should update valid user fields", async () => {
+  const response = await supertest(app)
+    .patch("/api/users/me")
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`) // setting up the Authorization header with JWT
+    .send({
+      name: "Test User update",
+      age: 25
+    })
+    .expect(200);
+
+  const user = await User.findById(userOneId);
+  expect(user.name).toEqual("Test User update");
+});
+
 // TEST CASE for deleting current user account
 test("Should delete account for user", async () => {
   await supertest(app)
