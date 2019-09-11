@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "server": "env-cmd -f ./config/dev.env nodemon server.js"
+    "server": "env-cmd -f ./config/dev.env nodemon server.js",
+    "test": "env-cmd -f ./config/test.env jest --watch"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +26,7 @@
   },
   "devDependencies": {
     "env-cmd": "^10.0.1",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.2"
   }
 }
