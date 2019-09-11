@@ -25,6 +25,23 @@ beforeEach(async () => {
 
 // Dummy user setup for test cases END
 
+// TEST CASE for getting current user profile
+test("Should get current user profile", async () => {
+  await supertest(app)
+    .get("/api/users/me")
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`) // setting up the Authorization header with JWT
+    .send()
+    .expect(200);
+});
+
+// TEST CASE for Unauthorized access for getting current user profile
+test("Should not get current user profile", async () => {
+  await supertest(app)
+    .get("/api/users/me")
+    .send()
+    .expect(401);
+});
+
 // TEST CASE for sign up
 test("Should signup a new user", async () => {
   const response = await supertest(app)
@@ -77,21 +94,16 @@ test("Should not login non-existing user", async () => {
     .expect(400);
 });
 
-// TEST CASE for getting current user profile
-test("Should get current user profile", async () => {
+// TEST CASE for uploading avatar image
+test("Should upload avatar image", async () => {
   await supertest(app)
-    .get("/api/users/me")
+    .post("/api/users/me/avatar")
     .set("Authorization", `Bearer ${userOne.tokens[0].token}`) // setting up the Authorization header with JWT
-    .send()
+    .attach("avatar", "tests/fixtures/profile-pic.jpg") // attaches files to upload
     .expect(200);
-});
 
-// TEST CASE for Unauthorized access for getting current user profile
-test("Should not get current user profile", async () => {
-  await supertest(app)
-    .get("/api/users/me")
-    .send()
-    .expect(401);
+  const user = await User.findById(userOneId);
+  expect(user.avatar).toEqual(expect.any(Buffer)); // checks if the user.avatar is Buffer type or not
 });
 
 // TEST CASE for deleting current user account
