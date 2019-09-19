@@ -211,3 +211,12 @@ test("Should not delete account for unauthorized user", async () => {
     .send()
     .expect(401);
 });
+
+// TEST CASE for not deleting account for unauthenticated user
+test("Should not delete account for unauthenticated user", async () => {
+  await supertest(app)
+    .delete("/api/users/me")
+    .set("Authorization", `sds${userOne.tokens[0].token}`)
+    .send()
+    .expect(401);
+});
