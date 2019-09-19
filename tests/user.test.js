@@ -77,7 +77,7 @@ test("Should not signup user with invalid email", async () => {
     .expect(400);
 });
 
-// TEST CASE for not Test case created for not deleting other user's task password
+// TEST CASE for not signing up user with invalid password
 test("Should not signup user with invalid password", async () => {
   await supertest(app)
     .post("/api/users")
@@ -141,7 +141,7 @@ test("Should update valid user fields", async () => {
   expect(user.name).toEqual("Test User update");
 });
 
-// TEST CASE for update user if unauthenticated
+// TEST CASE for not updating user if unauthenticated
 test("Should not update user if unauthenticated", async () => {
   await supertest(app)
     .patch("/api/users/me")
@@ -151,6 +151,45 @@ test("Should not update user if unauthenticated", async () => {
       age: 25
     })
     .expect(401);
+});
+
+// TEST CASE for not updating user with invalid name
+test("Should not update user with invalid name", async () => {
+  await supertest(app)
+    .patch("/api/users/me")
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`) // setting up the Authorization header with JWT
+    .send({
+      name: "",
+      email: "test@test.com",
+      password: "123456789"
+    })
+    .expect(400);
+});
+
+// TEST CASE for not updating user with invalid email
+test("Should not update user with invalid email", async () => {
+  await supertest(app)
+    .patch("/api/users/me")
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`) // setting up the Authorization header with JWT
+    .send({
+      name: "Rohit",
+      email: "test.com",
+      password: "123456789"
+    })
+    .expect(400);
+});
+
+// TEST CASE for not updating user with invalid password
+test("Should not update user with invalid password", async () => {
+  await supertest(app)
+    .patch("/api/users/me")
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`) // setting up the Authorization header with JWT
+    .send({
+      name: "Rohit",
+      email: "test@test.com",
+      password: ""
+    })
+    .expect(400);
 });
 
 // TEST CASE for deleting current user account
