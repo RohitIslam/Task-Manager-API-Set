@@ -77,7 +77,7 @@ test("Should not signup user with invalid email", async () => {
     .expect(400);
 });
 
-// TEST CASE for not signing up user with invalid password
+// TEST CASE for not Test case created for not deleting other user's task password
 test("Should not signup user with invalid password", async () => {
   await supertest(app)
     .post("/api/users")
@@ -139,6 +139,18 @@ test("Should update valid user fields", async () => {
 
   const user = await User.findById(userOneId);
   expect(user.name).toEqual("Test User update");
+});
+
+// TEST CASE for update user if unauthenticated
+test("Should not update user if unauthenticated", async () => {
+  await supertest(app)
+    .patch("/api/users/me")
+    .set("Authorization", `sds${userOne.tokens[0].token}`)
+    .send({
+      name: "Test User update",
+      age: 25
+    })
+    .expect(401);
 });
 
 // TEST CASE for deleting current user account
