@@ -53,6 +53,42 @@ test("Should signup a new user", async () => {
   expect(user.password).not.toBe("123456789");
 });
 
+// TEST CASE for not signing up user with invalid name
+test("Should not signup user with invalid name", async () => {
+  await supertest(app)
+    .post("/api/users")
+    .send({
+      name: "",
+      email: "test@test.com",
+      password: "123456789"
+    })
+    .expect(400);
+});
+
+// TEST CASE for not signing up user with invalid email
+test("Should not signup user with invalid email", async () => {
+  await supertest(app)
+    .post("/api/users")
+    .send({
+      name: "Rohit",
+      email: "test.com",
+      password: "123456789"
+    })
+    .expect(400);
+});
+
+// TEST CASE for not signing up user with invalid password
+test("Should not signup user with invalid password", async () => {
+  await supertest(app)
+    .post("/api/users")
+    .send({
+      name: "Rohit",
+      email: "test@test.com",
+      password: ""
+    })
+    .expect(400);
+});
+
 // TEST CASE for login
 test("Should login existing user", async () => {
   const response = await supertest(app)
